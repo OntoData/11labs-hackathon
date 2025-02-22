@@ -48,7 +48,7 @@ async def startup_event():
     # Schedule the rescrape_11labs function to run every day at midnight
     scheduler.add_job(
         rescrape_11labs,
-        CronTrigger(hour="*", minute="*"),  # Run at midnight
+        CronTrigger(hour="*", minute="0"),  # Run at midnight
         id="rescrape_11labs",
         name="Rescrape 11Labs data daily",
         replace_existing=True,
