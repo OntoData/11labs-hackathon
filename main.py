@@ -9,7 +9,7 @@ from loguru import logger
 
 app = FastAPI()
 
-ELEVEN_LABS_API_KEY = "sk_92fa592fca5a0d802a5f4b4e64baffda6e797f87694d684f"
+ELEVEN_LABS_API_KEY = "sk_ddcf1116a995e8d8fc660fc5cd2316bcf1d24e2282cf7ff4"
 HEADERS = {"xi-api-key": ELEVEN_LABS_API_KEY}
 MAKE_UPDATE_CONV_WEBHOOK='https://hook.eu2.make.com/7n8x3uqwlpncavwf47zzd03uhithv9p3'
 AGENT_ID='w6UPLbT9UrQACYRfMou2'
@@ -59,6 +59,11 @@ async def startup_event():
 @app.on_event("shutdown")
 async def shutdown_event():
     scheduler.shutdown()
+
+@app.post("/rescrape")
+async def rescrape():
+    await rescrape_11labs()
+    return {"message": "Rescrape request received"}
 
 
 @app.get("/")
