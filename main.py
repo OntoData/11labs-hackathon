@@ -11,8 +11,8 @@ app = FastAPI()
 
 ELEVEN_LABS_API_KEY = "sk_92fa592fca5a0d802a5f4b4e64baffda6e797f87694d684f"
 HEADERS = {"xi-api-key": ELEVEN_LABS_API_KEY}
-MAKE_UPDATE_CONV_WEBHOOK='https://hook.eu2.make.com/smc3t2l03t8pjdqq7ai5oay34lg5urs8'
-AGENT_ID='KfF2ZI9n0dJZj9ZUrJEe'
+MAKE_UPDATE_CONV_WEBHOOK='https://hook.eu2.make.com/7n8x3uqwlpncavwf47zzd03uhithv9p3'
+AGENT_ID='w6UPLbT9UrQACYRfMou2'
 
 # Initialize scheduler
 scheduler = AsyncIOScheduler()
