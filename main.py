@@ -13,6 +13,7 @@ ELEVEN_LABS_API_KEY = "sk_ddcf1116a995e8d8fc660fc5cd2316bcf1d24e2282cf7ff4"
 HEADERS = {"xi-api-key": ELEVEN_LABS_API_KEY}
 MAKE_UPDATE_CONV_WEBHOOK='https://hook.eu2.make.com/7n8x3uqwlpncavwf47zzd03uhithv9p3'
 AGENT_ID='w6UPLbT9UrQACYRfMou2'
+RESCAPE_INTERVAL_SECONDS = 300
 
 # Initialize scheduler
 scheduler = AsyncIOScheduler()
@@ -34,10 +35,14 @@ async def rescrape_11labs():
             response = client.conversational_ai.get_conversation(
                 conversation_id=conv_id,
             )
-            conv_content = '\n'.join([f'{tr.role}: {tr.message}' for tr in response.transcript])
-            payload = {'id': conv_id, 'conversation': conv_content}
-            logger.info(payload)
-            response = requests.post(MAKE_UPDATE_CONV_WEBHOOK, json=payload)
+            logger.info(response)
+            unix_time_to_fetch = int(datetime.now().timestamp()) - RESCAPE_INTERVAL_SECONDS
+            if response.metadata.start_time_unix_secs > unix_time_to_fetch:
+                conv_content = '\n'.join([f'{tr.role}: {tr.message}' for tr in response.transcript])
+                payload = {'id': conv_id, 'conversation': conv_content}
+                logger.info(payload)
+                if conv_content:
+                    response = requests.post(MAKE_UPDATE_CONV_WEBHOOK, json=payload)
     except requests.exceptions.RequestException as e:
         print(f"[{datetime.now()}] Error fetching 11Labs data: {str(e)}")
         return None
@@ -48,7 +53,7 @@ async def startup_event():
     # Schedule the rescrape_11labs function to run every day at midnight
     scheduler.add_job(
         rescrape_11labs,
-        CronTrigger(hour="*", minute="0"),  # Run at midnight
+        CronTrigger(hour="*", minute="*"),  # Run at midnight
         id="rescrape_11labs",
         name="Rescrape 11Labs data daily",
         replace_existing=True,
