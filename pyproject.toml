@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "domi"
+version = "0.1.0"
+description = ""
+authors = ["Bartosz Kolasa <bkolasa@datawalk.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = {extras = ["standard"], version = "^0.115.11"}
+fastapi-cli = {extras = ["standard"], version = "^0.0.7"}
+elevenlabs = "^1.52.0"
+loguru = "^0.7.3"
+
+
+[tool.poetry.group.dev.dependencies]
+dephell = "^0.8.3"
+ruff = "^0.9.9"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

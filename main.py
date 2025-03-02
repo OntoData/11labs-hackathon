@@ -1,8 +1,5 @@
 from fastapi import FastAPI
 import requests
-import uvicorn
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from apscheduler.triggers.cron import CronTrigger
 from datetime import datetime
 from elevenlabs import ElevenLabs
 from loguru import logger
@@ -15,8 +12,6 @@ MAKE_UPDATE_CONV_WEBHOOK='https://hook.eu2.make.com/7n8x3uqwlpncavwf47zzd03uhith
 AGENT_ID='w6UPLbT9UrQACYRfMou2'
 RESCAPE_INTERVAL_SECONDS = 300
 
-# Initialize scheduler
-scheduler = AsyncIOScheduler()
 
 
 async def rescrape_11labs():
@@ -47,23 +42,6 @@ async def rescrape_11labs():
         print(f"[{datetime.now()}] Error fetching 11Labs data: {str(e)}")
         return None
 
-
-@app.on_event("startup")
-async def startup_event():
-    # Schedule the rescrape_11labs function to run every day at midnight
-    # scheduler.add_job(
-    #     rescrape_11labs,
-    #     CronTrigger(hour="*", minute="*"),  # Run at midnight
-    #     id="rescrape_11labs",
-    #     name="Rescrape 11Labs data daily",
-    #     replace_existing=True,
-    # )
-    scheduler.start()
-
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    scheduler.shutdown()
 
 @app.post("/rescrape")
 async def rescrape():
